@@ -23,7 +23,7 @@ variable "deployer_key_name" {
 variable "deployer_public_key" {
   type = "string"
   default = <<EOF
-<redacted>
+ssh-rsa <redacted>
 EOF
 }
 
@@ -108,19 +108,34 @@ variable "private_cidr_block" {
   default     = "172.17.0.0/16"
 }
 
-variable "lb_name" {
+variable "service_lb_name" {
   description = "name of the load balancer"
-  default = "recruiting-lb"
+  default = "recruiting-service-lb"
 }
 
-variable "lb_target_group_name" {
+variable "service_lb_target_group_name" {
   description = "name of the lb target group"
-  default = "recruiting-lb-target-group"
+  default = "recruiting-service-lb-tg"
 }
 
-variable "lb_security_group_name" {
+variable "service_lb_security_group_name" {
   description = "name of the lb security group"
-  default = "recruiting-lb-security-group"
+  default = "recruiting-service-lb-sg"
+}
+
+variable "ui_lb_name" {
+  description = "name of the load balancer"
+  default = "recruiting-ui-lb"
+}
+
+variable "ui_lb_target_group_name" {
+  description = "name of the lb target group"
+  default = "recruiting-ui-lb-tg"
+}
+
+variable "ui_lb_security_group_name" {
+  description = "name of the lb security group"
+  default = "recruiting-ui-lb-sg"
 }
 
 ### ECS / Fargate
@@ -199,9 +214,14 @@ variable "service_port" {
   default     = 2999
 }
 
-variable "ecs_task_security_group_name" {
+variable "ecs_ui_task_security_group_name" {
   description = "name of ecs task security group"
-  default     = "recruiting-ecs-task-security-group"
+  default     = "recruiting-ui-ecs-task-security-group"
+}
+
+variable "ecs_service_task_security_group_name" {
+  description = "name of ecs task security group"
+  default     = "recruiting-service-ecs-task-security-group"
 }
 
 variable "task_count" {
@@ -211,26 +231,45 @@ variable "task_count" {
 
 ### Autoscaling
 
-variable "ecs_scale_up" {
+variable "ecs_service_scale_up" {
   description = "Scale up"
-  default     = "ecs_scale_up"
+  default     = "ecs_service_scale_up"
 }
 
-variable "ecs_scale_down" {
+variable "ecs_service_scale_down" {
   description = "Scale down"
-  default     = "ecs_scale_down"
+  default     = "ecs_service_scale_down"
 }
 
-variable "ecs_cpu_utilization_high" {
+variable "ecs_service_cpu_utilization_high" {
   description = "CPU high"
-  default     = "ecs_cpu_high"
+  default     = "ecs_service_cpu_high"
 }
 
-variable "ecs_cpu_utilization_low" {
+variable "ecs_service_cpu_utilization_low" {
   description = "CPU low"
-  default     = "ecs_cpu_low"
+  default     = "ecs_service_cpu_low"
 }
 
+variable "ecs_ui_scale_up" {
+  description = "Scale up"
+  default     = "ecs_ui_scale_up"
+}
+
+variable "ecs_ui_scale_down" {
+  description = "Scale down"
+  default     = "ecs_ui_scale_down"
+}
+
+variable "ecs_ui_cpu_utilization_high" {
+  description = "CPU high"
+  default     = "ecs_ui_cpu_high"
+}
+
+variable "ecs_ui_cpu_utilization_low" {
+  description = "CPU low"
+  default     = "ecs_ui_cpu_low"
+}
 
 ### RDS
 

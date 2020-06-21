@@ -1,11 +1,11 @@
-resource "aws_alb" "main" {
-  name            = var.lb_name
+resource "aws_alb" "ui" {
+  name            = var.ui_lb_name
   subnets         = aws_subnet.public.*.id
-  security_groups = [aws_security_group.lb.id]
+  security_groups = [aws_security_group.ui_lb.id]
 }
 
-resource "aws_alb_target_group" "app" {
-  name        = var.lb_target_group_name
+resource "aws_alb_target_group" "ui" {
+  name        = var.ui_lb_target_group_name
   port        = var.http_port
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
@@ -22,13 +22,13 @@ resource "aws_alb_target_group" "app" {
   }
 }
 
-resource "aws_alb_listener" "front_end" {
-  load_balancer_arn = aws_alb.main.id
+resource "aws_alb_listener" "ui" {
+  load_balancer_arn = aws_alb.ui.id
   port              = var.ui_port
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.app.id
+    target_group_arn = aws_alb_target_group.ui.id
     type             = "forward"
   }
 }

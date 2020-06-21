@@ -1,16 +1,15 @@
-resource "aws_appautoscaling_target" "target" {
+resource "aws_appautoscaling_target" "ui_target" {
   service_namespace  = "ecs"
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.recruiting.name}"
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.ui.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   min_capacity       = 1
   max_capacity       = 3
 }
 
-# Automatically scale capacity up by one
-resource "aws_appautoscaling_policy" "up" {
-  name               = var.ecs_scale_up
+resource "aws_appautoscaling_policy" "ui_up" {
+  name               = var.ecs_ui_scale_up
   service_namespace  = "ecs"
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.recruiting.name}"
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.ui.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
   step_scaling_policy_configuration {
@@ -24,14 +23,13 @@ resource "aws_appautoscaling_policy" "up" {
     }
   }
 
-  depends_on = [aws_appautoscaling_target.target]
+  depends_on = [aws_appautoscaling_target.ui_target]
 }
 
-# Automatically scale capacity down by one
-resource "aws_appautoscaling_policy" "down" {
-  name               = var.ecs_scale_down
+resource "aws_appautoscaling_policy" "ui_down" {
+  name               = var.ecs_ui_scale_down
   service_namespace  = "ecs"
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.recruiting.name}"
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.ui.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
   step_scaling_policy_configuration {
@@ -45,12 +43,11 @@ resource "aws_appautoscaling_policy" "down" {
     }
   }
 
-  depends_on = [aws_appautoscaling_target.target]
+  depends_on = [aws_appautoscaling_target.ui_target]
 }
 
-# CloudWatch alarm that triggers the autoscaling up policy
-resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
-  alarm_name          = var.ecs_cpu_utilization_high
+resource "aws_cloudwatch_metric_alarm" "ui_cpu_high" {
+  alarm_name          = var.ecs_ui_cpu_utilization_high
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -61,15 +58,14 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
 
   dimensions = {
     ClusterName = aws_ecs_cluster.main.name
-    ServiceName = aws_ecs_service.recruiting.name
+    ServiceName = aws_ecs_service.ui.name
   }
 
-  alarm_actions = [aws_appautoscaling_policy.up.arn]
+  alarm_actions = [aws_appautoscaling_policy.ui_up.arn]
 }
 
-# CloudWatch alarm that triggers the autoscaling down policy
-resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
-  alarm_name          = var.ecs_cpu_utilization_low
+resource "aws_cloudwatch_metric_alarm" "ui_cpu_low" {
+  alarm_name          = var.ecs_ui_cpu_utilization_low
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -80,9 +76,9 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
 
   dimensions = {
     ClusterName = aws_ecs_cluster.main.name
-    ServiceName = aws_ecs_service.recruiting.name
+    ServiceName = aws_ecs_service.ui.name
   }
 
-  alarm_actions = [aws_appautoscaling_policy.down.arn]
+  alarm_actions = [aws_appautoscaling_policy.ui_down.arn]
 }
 
