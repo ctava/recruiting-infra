@@ -1,4 +1,5 @@
 ### Provider
+
 variable "aws_region" {
   description = "The AWS region things are created in"
   default     = "us-east-1"
@@ -22,17 +23,18 @@ variable "deployer_key_name" {
 variable "deployer_public_key" {
   type = "string"
   default = <<EOF
-ssh-rsa <redacted>
+<redacted>
 EOF
 }
 
 ### Global Names
+
 variable "root_name" {
   description = "root system name"
   default     = "recruiting"
 }
 
-variable "client_name" {
+variable "ui_name" {
   description = "name of client app"
   default     = "recruiting-ui"
 }
@@ -44,8 +46,8 @@ variable "service_name" {
 
 ### Logging
 
-variable "client_log_group" {
-  description = "name of client log group"
+variable "ui_log_group" {
+  description = "name of ui log group"
   default     = "/ecs/recruiting-ui"
 }
 
@@ -79,6 +81,11 @@ variable "lb_access_logs_s3_bucket" {
 variable "aws_vpc" {
   description = "virtual private center"
   default     = "awsvpc"
+}
+
+variable "az_count" {
+  description = "Number of AZs to cover in a given region"
+  default     = "2"
 }
 
 variable "http_port" {
@@ -133,11 +140,6 @@ variable "ecs_task_execution_role_name" {
   default = "recruiting-ecs-task-execution-role"
 }
 
-variable "az_count" {
-  description = "Number of AZs to cover in a given region"
-  default     = "2"
-}
-
 variable "disabled_desired_count" {
   description = "Number of docker instances to run"
   default     = 0
@@ -177,12 +179,12 @@ variable "fargate_half_memory" {
   default     = "1024"
 }
 
-variable "client_image" {
+variable "ui_image" {
   description = "Docker image to run in the ECS cluster"
   default     = "<redacted>.dkr.ecr.us-east-1.amazonaws.com/recruiting-ui:latest"
 }
 
-variable "client_port" {
+variable "ui_port" {
   description = "Port exposed by the docker image"
   default     = 3000
 }
@@ -201,6 +203,34 @@ variable "ecs_task_security_group_name" {
   description = "name of ecs task security group"
   default     = "recruiting-ecs-task-security-group"
 }
+
+variable "task_count" {
+  description = "Number of ecs tasks to run"
+  default     = 1
+}
+
+### Autoscaling
+
+variable "ecs_scale_up" {
+  description = "Scale up"
+  default     = "ecs_scale_up"
+}
+
+variable "ecs_scale_down" {
+  description = "Scale down"
+  default     = "ecs_scale_down"
+}
+
+variable "ecs_cpu_utilization_high" {
+  description = "CPU high"
+  default     = "ecs_cpu_high"
+}
+
+variable "ecs_cpu_utilization_low" {
+  description = "CPU low"
+  default     = "ecs_cpu_low"
+}
+
 
 ### RDS
 
@@ -284,7 +314,7 @@ variable "rds_port" {
 }
 
 variable "rds_kms_key_arn" {
-  description = "ARN to allow access to all pricinpals"
+  description = "ARN to allow access to all principals"
   default     = "<redacted>"
 }
 

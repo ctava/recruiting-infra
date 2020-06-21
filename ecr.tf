@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "client-repo" {
-  name = var.client_name
+resource "aws_ecr_repository" "ui-repo" {
+  name = var.ui_name
 }
 
 resource "aws_ecr_repository" "service-repo" {

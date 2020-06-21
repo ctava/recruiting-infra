@@ -23,6 +23,8 @@ resource "aws_db_instance" "default" {
     ignore_changes = ["password", "engine_version"]
   }
 
+  depends_on = [aws_db_subnet_group.default]
+
 }
 
 resource "aws_db_subnet_group" "default" {

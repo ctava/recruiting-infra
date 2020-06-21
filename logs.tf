@@ -1,10 +1,10 @@
 
-resource "aws_cloudwatch_log_group" "client_log_group" {
-  name              = var.client_log_group
+resource "aws_cloudwatch_log_group" "ui_log_group" {
+  name              = var.ui_log_group
   retention_in_days = var.retention_in_days
 
   tags = {
-    Name = var.client_log_group
+    Name = var.ui_log_group
   }
 }
 

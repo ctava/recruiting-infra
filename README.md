@@ -59,17 +59,17 @@ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`
 wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 sudo apt-get update
 sudo apt-get upgrade
-
 sudo apt-get install postgresql postgresql-contrib libpq-dev pgadmin3 postgresql-client-common
 
 createdb <your_database_name> -h <your_db_instance_id_here>.us-east-1.rds.amazonaws.com -U <your_admin_account_name> -W 
-enter password
+<enter password>
 
 psql <your_database_name> -h <your_db_instance_id_here>.us-east-1.rds.amazonaws.com -U <your_admin_account_name> -W 
-enter password
+<enter password>
 
-create schema
-alter tables to point to new schema
+create schema <your_schema_name>;
+alter table candidate set schema <your_schema_name>;
+alter table position set schema <your_schema_name>;
 ```
 
 # References
